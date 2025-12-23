@@ -1,7 +1,9 @@
 import React from "react";
+import { useState } from "react";
 import Movie from "./Movie";
+import MovieForm from "./MovieForm";
 
-const movies = [
+const MOVIES = [
   {
     title: "Captain America - The First Avenger",
     hall: 2,
@@ -32,20 +34,51 @@ const movies = [
 ];
 
 const Movies = () => {
-  const date = new Date().toLocaleDateString('sr-RS');
+
+  const [movies, setMovies] = useState(MOVIES);
   
+  
+  const date = new Date().toLocaleDateString('sr-RS');
+
+  
+  const addMovie = movie => {
+    setMovies(prev => [
+      ...prev,
+      {
+        title: movie.title,
+        hall: movie.hall,
+        price: movie.price,
+        poster: movie.url
+      }
+    ]);
+  };
+
+  const editMovie = (editedMovie, key) => {
+    setMovies(prev => {
+      const newMovies = [...prev]; 
+      newMovies[key].title = editedMovie.title;
+      newMovies[key].hall = editedMovie.hall;
+      newMovies[key].price = editedMovie.price;
+      newMovies[key].poster = editedMovie.poster;
+      return newMovies; 
+    });
+  };
+
   return (
     <div>
       <p><strong>Repertoar za danas ({date})</strong></p>
       {movies.map((movie, index) => (
         <Movie 
           key={index}
+          movieKey={index}
+          editMovie={editMovie}
           title={movie.title} 
           hall={movie.hall} 
           price={movie.price}
           poster={movie.poster}
         />
       ))}
+      <MovieForm handleMovie={addMovie} />
     </div>
   );
 };

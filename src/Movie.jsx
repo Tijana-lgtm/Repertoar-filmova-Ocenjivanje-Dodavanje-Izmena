@@ -1,11 +1,14 @@
-import { useState } from "react";
 import React from "react";
+import { useState } from "react";
 import "./Movie.css";
+import MovieForm from "./MovieForm";
 
-const Movie = ({ title, hall, price, poster }) => {
+const Movie = ({ movieKey, title, hall, price, poster, editMovie }) => {
 
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
+  const [showForm, setShowForm] = useState(false);
+
 
   const handleLike = () => {
     setLikes(prev => prev + 1);
@@ -15,11 +18,15 @@ const Movie = ({ title, hall, price, poster }) => {
     setDislikes(prev => prev + 1);
   };
 
+  const handleEdit = () => {
+    setShowForm(!showForm);
+  };
+
 
   const defaultPrice = 300;
-  const displayPrice = price || defaultPrice;;
+  const displayPrice = price || defaultPrice;
   
-  return(
+  return (
     <div className="container">
       <div className="img">
         <img className="movie-img" src={poster} alt={title} />
@@ -34,11 +41,21 @@ const Movie = ({ title, hall, price, poster }) => {
           )}
         </div>
         <div className="buttons">
-          <button onClick={() => handleLike()}>Like</button>
-          <button onClick={() => handleDislike()}>Dislike</button>
+          <button onClick={handleLike}>Like</button>
+          <button onClick={handleDislike}>Dislike</button>
           <p>Likes: {likes}</p>
           <p>Dislikes: {dislikes}</p>
-
+          <button onClick={handleEdit}>Edit</button>
+          {showForm && (
+            <MovieForm 
+              handleMovie={editMovie} 
+              movieKey={movieKey} 
+              title={title} 
+              hall={hall} 
+              price={price} 
+              poster={poster}
+            />
+          )}
         </div>
       </div>
     </div>
